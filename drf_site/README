@@ -1,0 +1,11 @@
+[override rest auth account confirmation email]
+site-packages/allauth/adapter.py
+    def send_confirmation_mail(self, request, emailconfirmation, signup):
+
+override email 內容:
+copy
+site-packages/allauth/templates/account/email/email_confirmation_message.txt
+site-packages/allauth/templates/account/email/email_confirmation_subject.txt
+to
+templates/account/email/email_confirmation_message.txt
+templates/account/email/email_confirmation_subject.txt

@@ -1,0 +1,47 @@
+edit /etc/systemd/system/gunicorn.service  :
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=morris
+Group=www-data
+WorkingDirectory=/home/morris/project/drf_angular/drf_site/drf_site/server
+ExecStart=/home/morris/project/drf_angular/movenv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/morris/project/drf_angular/drf_site/drf_site/server/server.sock config.wsgi:application
+
+
+
+sudo systemctl start gunicorn
+sudo systemctl enable gunicorn
+
+check log:
+sudo journalctl -u gunicorn
+
+
+
+edit /etc/nginx/sites-available/drfapp  :
+
+server {
+    listen 8000;
+    server_name 127.0.0.1;
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/morris/project/drf_angular/drf_site/drf_site/server/;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/morris/project/drf_angular/drf_site/drf_site/server/server.sock;
+    }
+}
+
+
+sudo ln -s /etc/nginx/sites-available/drfapp /etc/nginx/sites-enabled
+
+test configuration:
+sudo nginx -t
+sudo systemctl restart nginx
+
+check log:
+sudo tail -F /var/log/nginx/error.log

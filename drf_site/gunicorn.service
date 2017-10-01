@@ -1,0 +1,9 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=morris
+Group=www-data
+WorkingDirectory=/home/morris/project/drf_angular/drf_site/drf_site/server
+ExecStart=/home/morris/project/drf_angular/movenv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/morris/project/drf_angular/drf_site/drf_site/server/server.sock config.wsgi:application
