@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'retail',
+    'room',
+    'django_cleanup', # should go after your apps
 ]
 
 MIDDLEWARE = [
