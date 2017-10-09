@@ -1,4 +1,8 @@
 [set User as foreign key]
-You need import the User model at the top of your file
+You need import the User model at the top of your file:
  from django.contrib.auth.models import User
 so python can resolve the reference.
+
+
+[[[[AWS EC2 Deploy NOTICE!!!]]]
+若刪掉 movenv, 記得先 (venv)pip install gunicorn
