@@ -7,8 +7,10 @@ class RoomPermission(permissions.BasePermission):
         if view.action == 'list':
         #   return request.user.is_authenticated() and request.user.is_admin
             print ('allow list @@')
+            print ('user: ',request.user)
             return True
         elif view.action in ['create', 'retrieve']:
+            print ('user: ',request.user)
             return True
         elif view.action in ['update', 'partial_update', 'destroy']:
             return False

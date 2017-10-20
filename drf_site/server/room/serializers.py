@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Room
 from .models import RoomImage
+from .object import Task
 
 class RoomImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,20 +18,36 @@ class RoomImageSerializer(serializers.ModelSerializer):
 class ListRoomSerializer(serializers.ModelSerializer):
     room_photos = RoomImageSerializer(many=True)
 
+    # see http://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
+    # 對應 get_like_count, 取出 many to many user count
+    like_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Room
-        fields = ("id", "title", "description", "price_month", "room_photos")
+        fields = ("id", "title", "description", "price_month", "room_photos", "like_count")
         # fields = ("url", "title", "description", "price_month", "room_photos")
         # fields = '__all__'
+
+    def get_like_count(self, obj):
+        return obj.who_likes.count()
+
 
 # GET /rooms/id
 class RetrieveRoomSerializer(serializers.ModelSerializer):
     room_photos = RoomImageSerializer(many=True)
 
+    # 現在登入的user是否收藏
+    is_user_like = serializers.SerializerMethodField()
+
     class Meta:
         model = Room
     #    fields = ('id', 'room_photos')
         fields = '__all__'
+
+    def get_is_user_like(self, obj):
+        print ('user id: ', self.context['request'].user.id);
+        # print (obj)
+        return (obj.who_likes.filter(id=self.context['request'].user.id).count())
 
 # POST /rooms
 class CreateRoomSerializer(serializers.ModelSerializer):
@@ -38,3 +55,27 @@ class CreateRoomSerializer(serializers.ModelSerializer):
         model = Room
     #    fields = ('id', 'room_photos')
         fields = '__all__'
+
+"""
+  Test non model TaskSerializer
+"""
+STATUSES = (
+    'New',
+    'Ongoing',
+    'Done',
+)
+
+
+class TaskSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length=256)
+    owner = serializers.CharField(max_length=256)
+    status = serializers.ChoiceField(choices=STATUSES, default='New')
+
+    def create(self, validated_data):
+        return Task(id=None, **validated_data)
+
+    def update(self, instance, validated_data):
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+        return instance

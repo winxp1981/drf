@@ -1,6 +1,6 @@
 from fabric.api import *
 
-env.hosts = ['ec2-54-254-207-247.ap-southeast-1.compute.amazonaws.com']
+env.hosts = ['ec2-52-221-18-155.ap-southeast-1.compute.amazonaws.com']
 env.user = 'ubuntu'
 #env.password = 'e4cu8whx'
 env.key_filename = '/home/morris/project/AWS_EC2/roombacker.pem'

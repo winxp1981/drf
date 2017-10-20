@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from retail.views import ChainViewSet, StoreViewSet, EmployeeViewSet, RoomInfoViewSet
-from room.views import RoomViewSet, RoomImageViewSet
+from room.views import RoomViewSet, RoomImageViewSet, TaskViewSet
 from core.views import FacebookLogin
 from core.views import GoogleLogin
 from core.views import null_view
@@ -33,6 +33,7 @@ router.register(prefix='employees', viewset=EmployeeViewSet)
 router.register(prefix='roominfo', viewset=RoomInfoViewSet)
 router.register(prefix='rooms', viewset=RoomViewSet)
 router.register(prefix='roomsimage', viewset=RoomImageViewSet)
+router.register(r'tasks', TaskViewSet, base_name='tasks')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

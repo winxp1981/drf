@@ -4,6 +4,7 @@ from .models import RoomImage
 
 class RoomAdmin(admin.ModelAdmin):
     list_display = ('id', 'host', 'title', 'description', 'location', 'area', 'layout', 'parking', 'price_month', 'deposit')
+    filter_horizontal = ('who_likes',)   # django admin 顯示 ManyToManyField
 
 class RoomImageAdmin(admin.ModelAdmin):
     list_display = ('id', 'room', 'photo')

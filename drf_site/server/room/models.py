@@ -51,6 +51,7 @@ class Room(models.Model):
     layout = models.CharField(max_length=20, blank=True)
     floor  = models.CharField(max_length=20)
     direction  = models.CharField(max_length=20, blank=True)
+    who_likes = models.ManyToManyField(User, related_name='who_likes', blank=True)
 
     age = models.IntegerField(
         default=0,
