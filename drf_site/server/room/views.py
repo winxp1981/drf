@@ -12,6 +12,7 @@ from .permissions import RoomPermission
 from .object import Task
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.decorators import detail_route
 
 
 class RoomViewSet(viewsets.ModelViewSet):
@@ -32,6 +33,24 @@ class RoomViewSet(viewsets.ModelViewSet):
             #print ('@@ create room')
             return CreateRoomSerializer
         return self.serializer_class
+
+    @detail_route(methods=['post'])  # e.g. POST  http://localhost:8000/rooms/16/like/
+    def like(self, request, pk=None):
+        print ("%s like room %s" % (request.user, pk) )
+        room = Room.objects.get(id=pk)
+        room.who_likes.add(request.user)
+    #    print (Room.objects.get(id=pk).who_likes.count())
+        return Response(status=status.HTTP_200_OK)
+        #return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['post'])  # e.g. POST  http://localhost:8000/rooms/16/dislike/
+    def dislike(self, request, pk=None):
+        print ("%s like room %s" % (request.user, pk) )
+        room = Room.objects.get(id=pk)
+        room.who_likes.remove(request.user)
+    #    print (Room.objects.get(id=pk).who_likes.count())
+        return Response(status=status.HTTP_200_OK)
+        #return Response(status=status.HTTP_400_BAD_REQUEST)
 
 """
     def retrieve(self, request, pk=None):
