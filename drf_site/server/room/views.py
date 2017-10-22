@@ -24,6 +24,7 @@ class RoomViewSet(viewsets.ModelViewSet):
     search_fields = ('location', 'description')  # example POST: http://localhost:8000/stores/?search=ab0
 
     def get_serializer_class(self):
+        print ('@@ view %s' % self.action)
         if self.action == 'list':
             return ListRoomSerializer
         if self.action == 'retrieve':
@@ -51,6 +52,11 @@ class RoomViewSet(viewsets.ModelViewSet):
     #    print (Room.objects.get(id=pk).who_likes.count())
         return Response(status=status.HTTP_200_OK)
         #return Response(status=status.HTTP_400_BAD_REQUEST)
+'''
+    def destroy(self, request, pk=None):
+        print ('delete room %s' % pk)
+        return Response(status=status.HTTP_200_OK)
+'''
 
 """
     def retrieve(self, request, pk=None):
