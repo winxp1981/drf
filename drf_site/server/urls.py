@@ -19,20 +19,18 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from retail.views import ChainViewSet, StoreViewSet, EmployeeViewSet, RoomInfoViewSet
 from room.views import RoomViewSet, RoomImageViewSet, TaskViewSet
+from userprofiles.views import UserViewSet #, ProfileViewSet
 from core.views import FacebookLogin
 from core.views import GoogleLogin
 from core.views import null_view
 from allauth.account.views import confirm_email as allauthemailconfirmation
 
 router = DefaultRouter()
-router.register(prefix='chains', viewset=ChainViewSet)
-router.register(prefix='stores', viewset=StoreViewSet)
-router.register(prefix='employees', viewset=EmployeeViewSet)
-router.register(prefix='roominfo', viewset=RoomInfoViewSet)
 router.register(prefix='rooms', viewset=RoomViewSet)
-router.register(prefix='roomsimage', viewset=RoomImageViewSet)
+#router.register(prefix='roomsimage', viewset=RoomImageViewSet)
+router.register(prefix='user', viewset=UserViewSet)   # redirect user info rest api url to /user
+#router.register(prefix='profile', viewset=ProfileViewSet)
 router.register(r'tasks', TaskViewSet, base_name='tasks')
 
 urlpatterns = [
@@ -44,7 +42,6 @@ urlpatterns = [
     url(r'^', include('django.contrib.auth.urls')),
     url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
     url(r'^rest-auth/google/$', GoogleLogin.as_view(), name='google_login'),
-#    url(r'^$', retail_view),
 ]
 
 

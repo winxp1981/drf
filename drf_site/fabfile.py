@@ -55,6 +55,7 @@ def deploy():
         print('install requirements.txt...')
         # sudo('pip install -r server/requirements.txt')   # user pip-3.4 for Amazon linux
         virtualenv('pip install -r server/requirements.txt')
+        virtualenv('pip install gunicorn')
         local('rm -f %s' % TAR_FILE_NAME)
 
 def hello():

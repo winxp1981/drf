@@ -50,9 +50,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'rest_auth.registration',
-    'retail',
-    'room',
     'django_cleanup', # should go after your apps
+    'room',
+    'userprofiles',
 ]
 
 MIDDLEWARE = [
@@ -192,7 +192,6 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
 
 
 MEDIA_URL = '/media/'

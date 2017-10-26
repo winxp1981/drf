@@ -5,4 +5,15 @@ so python can resolve the reference.
 
 
 [[[[AWS EC2 Deploy NOTICE!!!]]]
-若刪掉 movenv, 記得先 (venv)pip install gunicorn
+記得先 (venv)pip install gunicorn
+
+
+facebook avatar
+>>> from allauth.socialaccount.models import SocialAccount
+>>> SocialAccount.objects.filter(user_id=user.id, provider='facebook')
+<QuerySet [<SocialAccount: >]>
+>>> fb_uid = SocialAccount.objects.filter(user_id=user.id, provider='facebook')
+>>> fb_uid[0].uid
+'10215010705400744'
+
+http://graph.facebook.com/10215010705400744/picture?width=400&height=400
