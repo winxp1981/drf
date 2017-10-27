@@ -5,8 +5,9 @@ from rest_framework import permissions
 class UserPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
-        if view.action == 'retrieve':
-        #    print ('user: ',request.user)
+        # print (view.action)
+        if view.action in ['retrieve', 'edit_profile']:
+            print ('user: ',request.user)
             return request.user.is_authenticated()
         else:
             return False
