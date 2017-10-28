@@ -15,12 +15,19 @@ class Profile(models.Model):
     birth_date = models.DateField(null=True, blank=True)
     avatar_url = models.CharField(default='http://www.gravatar.com/avatar?d=mm', max_length=200, blank=True)
 
+
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
-        #    print ("create_user_profile: %s %s" % (instance, instance.id))
+          #  print ("create_user_profile: %s %s" % (instance, instance.id))
+          #  print ("_nick_name: %s %s" % (instance.first_name, instance.last_name))
+            if not instance.first_name and not instance.last_name:
+                _nick_name = instance.username
+            else:
+                _nick_name = instance.first_name+' '+instance.last_name
+
             Profile.objects.create(user=instance,
-                                   nick_name=instance.first_name+' '+instance.last_name,
+                                   nick_name=_nick_name,
                                    )
 
     @receiver(post_save, sender=SocialAccount)
