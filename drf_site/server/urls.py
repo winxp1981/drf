@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from room.views import RoomViewSet, RoomImageViewSet, TaskViewSet
+from room.views import RoomViewSet, TaskViewSet, RoomImageViewSet
 from userprofiles.views import UserViewSet #, ProfileViewSet
 from core.views import FacebookLogin
 from core.views import GoogleLogin
@@ -28,7 +28,7 @@ from allauth.account.views import confirm_email as allauthemailconfirmation
 
 router = DefaultRouter()
 router.register(prefix='rooms', viewset=RoomViewSet)
-#router.register(prefix='roomsimage', viewset=RoomImageViewSet)
+router.register(prefix='roomsimage', viewset=RoomImageViewSet)
 router.register(prefix='user', viewset=UserViewSet)   # redirect user info rest api url to /user
 #router.register(prefix='profile', viewset=ProfileViewSet)
 router.register(r'tasks', TaskViewSet, base_name='tasks')

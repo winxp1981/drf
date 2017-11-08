@@ -14,9 +14,12 @@ class RoomImageSerializer(serializers.ModelSerializer):
         return RoomImage.objects.create(**validated_data)
 '''
 
+
+
 # GET /rooms
 class ListRoomSerializer(serializers.ModelSerializer):
-    room_photos = RoomImageSerializer(many=True)
+    # room_photos = RoomImageSerializer(many=True)
+    room_thumb = serializers.SerializerMethodField()
 
     # see http://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
     # 對應 get_like_count, 取出 many to many user count
@@ -24,12 +27,19 @@ class ListRoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ("id", "title", "description", "price_month", "room_photos", "like_count")
-        # fields = ("url", "title", "description", "price_month", "room_photos")
+        fields = ("id", "title", "description", "price_month", "room_thumb", "like_count")
+        # fields = ("id", "title", "description", "price_month", "room_photos", "like_count")
         # fields = '__all__'
 
     def get_like_count(self, obj):
         return obj.who_likes.count()
+
+    # 只回傳第一張當做 thumbnail image
+    def get_room_thumb(self, obj):
+        query = obj.room_photos.first()
+        request = self.context.get('request')
+        serializer = RoomImageSerializer(query, many=False, context={'request': request})      # 註: 傳 request context 進去才能 build 出 full url
+        return serializer.data
 
 
 # GET /rooms/id

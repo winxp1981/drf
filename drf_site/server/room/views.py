@@ -35,6 +35,7 @@ class RoomViewSet(viewsets.ModelViewSet):
             return CreateRoomSerializer
         return self.serializer_class
 
+
     @detail_route(methods=['post'])  # e.g. POST  http://localhost:8000/rooms/16/like/
     def like(self, request, pk=None):
         print ("%s like room %s" % (request.user, pk) )
