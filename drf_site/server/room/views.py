@@ -22,9 +22,9 @@ class RoomViewSet(viewsets.ModelViewSet):
 #    queryset = Room.objects.all()    # 這裡拿掉queryset (override)的話, urls.py 要給 base_name
     serializer_class = ListRoomSerializer
     permission_classes = (RoomPermission,)
-    filter_backends = (DjangoFilterBackend, SearchFilter,)
+    # filter_backends = (DjangoFilterBackend, SearchFilter,)
     # filter_fields = ('number', 'address')
-    search_fields = ('location', 'description')  # example POST: http://localhost:8000/stores/?search=ab0
+    # search_fields = ('location', 'description')  # example POST: http://localhost:8000/stores/?search=ab0
 
     def get_serializer_class(self):
         print ('@@ view %s' % self.action)
@@ -46,6 +46,16 @@ class RoomViewSet(viewsets.ModelViewSet):
         roomtype = self.request.query_params.get('roomtype', None)
         price = self.request.query_params.get('price', None)
         area = self.request.query_params.get('area', None)
+        keyword = self.request.query_params.get('keyword', None)   # additional serach keyword
+
+        if keyword is not None:
+            print ('keyword=%s' % keyword)
+            q_list.append(Q(title__contains=keyword))
+            q_list.append(Q(description__contains=keyword))
+            q_list.append(Q(location__contains=keyword))
+            # 先以keyword過濾
+            queryset = queryset.filter(reduce(operator.or_, q_list))
+            q_list = []
 
         if location is not None:
             print ('location=%s' % location)
