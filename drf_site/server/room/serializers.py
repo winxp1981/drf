@@ -27,7 +27,7 @@ class ListRoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ("id", "title", "description", "price_month", "room_thumb", "like_count")
+        fields = ("id", "title", "description", "price_month", "room_thumb", "like_count", "location", "room_type", "area", "layout", "floor")
         # fields = ("id", "title", "description", "price_month", "room_photos", "like_count")
         # fields = '__all__'
 
