@@ -27,7 +27,7 @@ from core.views import null_view
 from allauth.account.views import confirm_email as allauthemailconfirmation
 
 router = DefaultRouter()
-router.register(prefix='rooms', viewset=RoomViewSet)
+router.register(prefix='rooms', viewset=RoomViewSet, base_name='room_detail')
 router.register(prefix='roomsimage', viewset=RoomImageViewSet)
 router.register(prefix='user', viewset=UserViewSet)   # redirect user info rest api url to /user
 #router.register(prefix='profile', viewset=ProfileViewSet)

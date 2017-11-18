@@ -13,10 +13,13 @@ from .object import Task
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
+from django.db.models import Q
+from functools import reduce
+import operator
 
 
 class RoomViewSet(viewsets.ModelViewSet):
-    queryset = Room.objects.all()
+#    queryset = Room.objects.all()    # 這裡拿掉queryset (override)的話, urls.py 要給 base_name
     serializer_class = ListRoomSerializer
     permission_classes = (RoomPermission,)
     filter_backends = (DjangoFilterBackend, SearchFilter,)
@@ -35,6 +38,75 @@ class RoomViewSet(viewsets.ModelViewSet):
             return CreateRoomSerializer
         return self.serializer_class
 
+    def get_queryset(self):
+        print ('get_queryset@ RoomViewSet')
+        queryset= Room.objects.all()
+        q_list = []
+        location = self.request.query_params.get('location', None)
+        roomtype = self.request.query_params.get('roomtype', None)
+        price = self.request.query_params.get('price', None)
+        area = self.request.query_params.get('area', None)
+
+        if location is not None:
+            print ('location=%s' % location)
+            q_list.append(Q(location__contains=location))
+
+        if roomtype is not None:
+            print ('roomtype=%s' % roomtype)
+            q_list.append(Q(room_type__contains=roomtype))
+
+        if price is not None:
+            print ('price=%s' % price)
+            if price == '_1W':
+                print ('< 10000')
+                q_list.append(Q(price_month__lt=10000))
+            elif price == '1W_2W':
+                print ('10000 <= x <= 20000')
+                q_list.append(Q(price_month__gte=10000))
+                q_list.append(Q(price_month__lte=20000))
+            elif price == '2W_3W':
+                print ('20000 <= x <= 30000')
+                q_list.append(Q(price_month__gte=20000))
+                q_list.append(Q(price_month__lte=30000))
+            elif price == '3W_4W':
+                print ('30000 <= x <= 40000')
+                q_list.append(Q(price_month__gte=30000))
+                q_list.append(Q(price_month__lte=40000))
+            elif price == '4W':
+                print ('40000 <= x <= 50000')
+                q_list.append(Q(price_month__gte=40000))
+
+        if area is not None:
+            print ('area=%s' % area)
+            if area == '_10P':
+                print ('< 10p')
+                q_list.append(Q(area__lt=10))
+            elif area == '10P_20P':
+                print ('10p <= x <= 20p')
+                q_list.append(Q(area__gte=10))
+                q_list.append(Q(area__lte=20))
+            elif area == '20P_30P':
+                print ('20p <= x <= 30p')
+                q_list.append(Q(area__gte=20))
+                q_list.append(Q(area__lte=30))
+            elif area == '30P_40P':
+                print ('30p <= x <= 40p')
+                q_list.append(Q(area__gte=30))
+                q_list.append(Q(area__lte=40))
+            elif area == '40P_50P':
+                print ('40p <= x <= 50p')
+                q_list.append(Q(area__gte=40))
+                q_list.append(Q(area__lte=50))
+            elif area == '50P':
+                print ('50p <= x')
+                q_list.append(Q(area__gte=50))
+
+        print ('get_queryset@RoomViewSet with %d conditions' % len(q_list))
+        if len(q_list) > 0:
+            return queryset.filter(reduce(operator.and_, q_list))
+        else:
+            return queryset
+        # return Room.objects.all()
 
     @detail_route(methods=['post'])  # e.g. POST  http://localhost:8000/rooms/16/like/
     def like(self, request, pk=None):
